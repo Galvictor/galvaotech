@@ -6,6 +6,8 @@ import {
   memoryAddLead,
   supabaseConfigStatus,
 } from "@/lib/leads";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 type Body = {
   name?: string;
@@ -15,14 +17,42 @@ type Body = {
   description?: string;
   deadline?: string | null;
   budget?: string | null;
+  /** Honeypot — se preenchido, é bot */
+  website?: string;
+  turnstileToken?: string;
 };
 
 export async function POST(req: Request) {
+  const ip = clientIp(req);
+  const limited = rateLimit(`leads:${ip}`, 5, 15 * 60 * 1000);
+  if (!limited.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Muitas tentativas. Aguarde alguns minutos e tente de novo.",
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limited.retryAfterSec) },
+      },
+    );
+  }
+
   let body: Body;
   try {
     body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ ok: false, error: "JSON inválido" }, { status: 400 });
+  }
+
+  // Honeypot: responde sucesso falso sem gravar / e-mail
+  if (body.website?.trim()) {
+    return NextResponse.json({ ok: true, id: null, storage: "discarded" });
+  }
+
+  const captcha = await verifyTurnstile(body.turnstileToken, ip);
+  if (!captcha.ok) {
+    return NextResponse.json({ ok: false, error: captcha.error }, { status: 400 });
   }
 
   const name = (body.name || "").trim();
@@ -38,6 +68,10 @@ export async function POST(req: Request) {
       { ok: false, error: "Campos obrigatórios ausentes" },
       { status: 400 },
     );
+  }
+
+  if (name.length > 200 || contact.length > 200 || description.length > 5000) {
+    return NextResponse.json({ ok: false, error: "Dados inválidos" }, { status: 400 });
   }
 
   const payload = {
@@ -58,7 +92,6 @@ export async function POST(req: Request) {
   let storage: "supabase" | "memory" = "memory";
 
   if (!supabase) {
-    // Em produção (Vercel) não engolir o erro — senão só o e-mail “funciona”
     if (onVercel || process.env.NODE_ENV === "production") {
       return NextResponse.json(
         {

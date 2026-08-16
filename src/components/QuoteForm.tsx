@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { TurnstileField } from "@/components/TurnstileField";
+
 const PROJECT_TYPES = [
   "Site",
   "Sistema web",
@@ -41,6 +43,10 @@ const BUDGETS = [
 
 type Status = "idle" | "loading" | "error";
 
+const turnstileRequired = Boolean(
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim(),
+);
+
 export function QuoteForm() {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
@@ -52,12 +58,19 @@ export function QuoteForm() {
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
   const [budget, setBudget] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim() || !contact.trim() || !projectType || !description.trim()) {
       setStatus("error");
       setError("Preencha nome, contato, tipo de projeto e a descrição.");
+      return;
+    }
+    if (turnstileRequired && !turnstileToken) {
+      setStatus("error");
+      setError("Confirme que você não é um robô.");
       return;
     }
     setStatus("loading");
@@ -74,12 +87,15 @@ export function QuoteForm() {
           description: description.trim(),
           deadline: deadline || null,
           budget: budget || null,
+          website: honeypot,
+          turnstileToken,
         }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) {
         setStatus("error");
         setError(data.error || "Não foi possível enviar. Tente de novo.");
+        setTurnstileToken(null);
         return;
       }
       router.push("/obrigado");
@@ -95,9 +111,22 @@ export function QuoteForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="mx-auto grid w-full max-w-2xl gap-4"
+      className="relative mx-auto grid w-full max-w-2xl gap-4"
       aria-label="Formulário de orçamento Galvão Tech"
     >
+      {/* Honeypot — bots preenchem; humanos não veem */}
+      <div className="absolute -left-[9999px] top-auto h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label>
+          Website
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </label>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm text-muted">
           Nome
@@ -215,6 +244,8 @@ export function QuoteForm() {
           </select>
         </label>
       </div>
+
+      <TurnstileField onToken={setTurnstileToken} />
 
       <button
         type="submit"
