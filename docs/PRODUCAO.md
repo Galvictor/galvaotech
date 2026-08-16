@@ -12,13 +12,15 @@
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://SEU-PROJETO.vercel.app
-NEXT_PUBLIC_SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_SECRET_KEY=...          # Secret / service_role — NÃO a Publishable
 RESEND_API_KEY=...
-RESEND_FROM=Galvão Tech <seu@dominio.com>
+RESEND_FROM=Galvão Tech <onboarding@resend.dev>
 LEADS_NOTIFY_EMAIL=seu@email.com
 ADMIN_PASSWORD=senha-forte
 ```
+
+A `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (anon) **não basta** para gravar leads com RLS. Use a **Secret key**.
 
 ## Checklist
 

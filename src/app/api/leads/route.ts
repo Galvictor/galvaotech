@@ -64,7 +64,7 @@ export async function POST(req: Request) {
         {
           ok: false,
           error:
-            "Supabase não configurado no servidor. Defina NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY (service_role) no Vercel e faça Redeploy.",
+            "Supabase não configurado no servidor. Defina NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SECRET_KEY (ou SUPABASE_SERVICE_ROLE_KEY) no Vercel e faça Redeploy.",
           config: cfg,
         },
         { status: 503 },
