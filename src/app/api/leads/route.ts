@@ -4,6 +4,7 @@ import { notifyLeadEmail } from "@/lib/email";
 import {
   getServiceSupabase,
   memoryAddLead,
+  supabaseConfigStatus,
 } from "@/lib/leads";
 
 type Body = {
@@ -50,24 +51,25 @@ export async function POST(req: Request) {
     status: "novo",
   };
 
+  const cfg = supabaseConfigStatus();
   const supabase = getServiceSupabase();
+  const onVercel = Boolean(process.env.VERCEL);
   let leadId: string | null = null;
+  let storage: "supabase" | "memory" = "memory";
 
-  if (supabase) {
-    const { data, error } = await supabase
-      .from("leads")
-      .insert(payload)
-      .select("id")
-      .single();
-    if (error) {
-      console.error("supabase leads insert", error);
+  if (!supabase) {
+    // Em produção (Vercel) não engolir o erro — senão só o e-mail “funciona”
+    if (onVercel || process.env.NODE_ENV === "production") {
       return NextResponse.json(
-        { ok: false, error: "Falha ao salvar lead" },
-        { status: 500 },
+        {
+          ok: false,
+          error:
+            "Supabase não configurado no servidor. Defina NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY (service_role) no Vercel e faça Redeploy.",
+          config: cfg,
+        },
+        { status: 503 },
       );
     }
-    leadId = data?.id ?? null;
-  } else {
     const row = memoryAddLead({
       name,
       contact,
@@ -78,10 +80,29 @@ export async function POST(req: Request) {
       budget,
     });
     leadId = row.id;
-    console.warn(
-      "[leads] Supabase não configurado — lead em memória (dev):",
-      leadId,
-    );
+    storage = "memory";
+  } else {
+    const { data, error } = await supabase
+      .from("leads")
+      .insert(payload)
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("supabase leads insert", error);
+      return NextResponse.json(
+        {
+          ok: false,
+          error: `Falha ao salvar no Supabase: ${error.message}`,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        },
+        { status: 500 },
+      );
+    }
+    leadId = data?.id ?? null;
+    storage = "supabase";
   }
 
   const mail = await notifyLeadEmail({
@@ -95,5 +116,10 @@ export async function POST(req: Request) {
     console.warn("[leads] e-mail não enviado:", mail.error);
   }
 
-  return NextResponse.json({ ok: true, id: leadId, email_sent: mail.sent });
+  return NextResponse.json({
+    ok: true,
+    id: leadId,
+    storage,
+    email_sent: mail.sent,
+  });
 }

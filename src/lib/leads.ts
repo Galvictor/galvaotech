@@ -13,18 +13,30 @@ export type LeadRow = {
   status: string;
 };
 
+/**
+ * Client server-only com service_role (bypassa RLS).
+ * Não usar anon key aqui — com RLS ativo o insert “some” ou falha.
+ */
 export function getServiceSupabase(): SupabaseClient | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key) return null;
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
 
-/** Armazenamento em memória quando Supabase não está configurado (dev). */
+export function supabaseConfigStatus(): {
+  hasUrl: boolean;
+  hasServiceRole: boolean;
+} {
+  return {
+    hasUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()),
+    hasServiceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()),
+  };
+}
+
+/** Armazenamento em memória quando Supabase não está configurado (dev local). */
 const memoryLeads: LeadRow[] = [];
 
 export function memoryListLeads(): LeadRow[] {
