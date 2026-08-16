@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { QuoteForm } from "@/components/QuoteForm";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 
@@ -229,6 +231,27 @@ export default function HomePage() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        <section
+          id="portfolio-teaser"
+          className="scroll-mt-20 border-t border-line"
+        >
+          <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+            <h2 className="font-display text-3xl font-semibold sm:text-4xl">
+              Experiência e projetos reais
+            </h2>
+            <p className="mt-3 max-w-2xl text-muted">
+              Apps na Play Store, SaaS em produção e consultoria digital —
+              Capco, full stack e freela contínuo.
+            </p>
+            <Link
+              href="/portfolio"
+              className="mt-8 inline-flex min-h-12 cursor-pointer items-center rounded-xl border border-line bg-elevated/60 px-5 py-3 text-sm font-semibold text-ink transition hover:border-teal/40"
+            >
+              Ver portfólio
+            </Link>
           </div>
         </section>
 
