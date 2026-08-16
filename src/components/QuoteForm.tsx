@@ -111,7 +111,7 @@ export function QuoteForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative mx-auto grid w-full max-w-2xl gap-4"
+      className="relative grid w-full gap-4"
       aria-label="Formulário de orçamento Galvão Tech"
     >
       {/* Honeypot — bots preenchem; humanos não veem */}
@@ -250,7 +250,7 @@ export function QuoteForm() {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="mt-2 min-h-12 rounded-xl bg-teal px-5 py-3 text-base font-semibold text-bg transition hover:bg-teal-dim disabled:opacity-60"
+        className="mt-2 min-h-12 w-full cursor-pointer rounded-xl border-0 bg-teal px-5 py-3 text-base font-semibold text-bg transition hover:bg-teal-dim disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "loading" ? "Enviando…" : "Solicitar orçamento"}
       </button>

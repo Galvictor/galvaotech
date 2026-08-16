@@ -24,7 +24,7 @@ export function SiteHeader() {
         </Link>
         <Link
           href="/#orcamento"
-          className="rounded-lg bg-teal px-3.5 py-2 font-semibold text-bg transition hover:bg-teal-dim"
+          className="rounded-lg bg-teal px-3.5 py-2 font-semibold text-bg transition hover:bg-teal-dim cursor-pointer"
         >
           Orçamento
         </Link>

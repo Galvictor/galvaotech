@@ -121,13 +121,13 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap gap-3 opacity-0 [animation:rise_0.75s_ease-out_0.24s_forwards]">
             <a
               href="#orcamento"
-              className="inline-flex min-h-12 items-center rounded-xl bg-teal px-5 py-3 text-sm font-semibold text-bg transition hover:bg-teal-dim"
+              className="inline-flex min-h-12 cursor-pointer items-center rounded-xl bg-teal px-5 py-3 text-sm font-semibold text-bg transition hover:bg-teal-dim"
             >
               Quero fazer um orçamento
             </a>
             <a
               href="#servicos"
-              className="inline-flex min-h-12 items-center rounded-xl border border-line bg-elevated/60 px-5 py-3 text-sm font-semibold text-ink transition hover:border-teal/40"
+              className="inline-flex min-h-12 cursor-pointer items-center rounded-xl border border-line bg-elevated/60 px-5 py-3 text-sm font-semibold text-ink transition hover:border-teal/40"
             >
               Ver o que desenvolvo
             </a>
@@ -257,7 +257,7 @@ export default function HomePage() {
             <div className="mt-10">
               <a
                 href="#orcamento"
-                className="inline-flex min-h-12 items-center rounded-xl bg-sand px-5 py-3 text-sm font-semibold text-bg transition hover:brightness-110"
+                className="inline-flex min-h-12 cursor-pointer items-center rounded-xl bg-sand px-5 py-3 text-sm font-semibold text-bg transition hover:brightness-110"
               >
                 Quero tirar minha ideia do papel
               </a>

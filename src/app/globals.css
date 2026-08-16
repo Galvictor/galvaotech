@@ -19,15 +19,15 @@
 }
 
 @theme inline {
-  --color-ink: rgb(var(--gt-ink-rgb) / <alpha-value>);
+  --color-ink: #e8ebe9;
   --color-muted: #9aa3a0;
-  --color-bg: rgb(var(--gt-bg-rgb) / <alpha-value>);
+  --color-bg: #070a09;
   --color-surface: #0e1412;
   --color-elevated: #151c19;
   --color-line: rgba(232, 235, 233, 0.1);
-  --color-teal: rgb(var(--gt-teal-rgb) / <alpha-value>);
+  --color-teal: #2ec4a0;
   --color-teal-dim: #1f8f75;
-  --color-sand: rgb(var(--gt-sand-rgb) / <alpha-value>);
+  --color-sand: #e8c07a;
   --color-danger: #f07167;
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
