@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Galvão Tech
 
-## Getting Started
+Landing profissional + formulário de orçamento + painel de leads.
 
-First, run the development server:
+**Posicionamento:** transformar ideia em aplicação web (full stack + infra). IA acelera o desenvolvimento; o cliente compra resultado.
+
+## Local
 
 ```bash
+cp .env.local.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Form: `#orcamento`
+- Admin: `/admin` (senha = `ADMIN_PASSWORD`, default dev: `dev-admin`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Planos
 
-## Learn More
+Ver [`.cursor/plans/galvaotech-00-roadmap.plan.md`](.cursor/plans/galvaotech-00-roadmap.plan.md).
 
-To learn more about Next.js, take a look at the following resources:
+## Produção
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ver [docs/PRODUCAO.md](docs/PRODUCAO.md).
